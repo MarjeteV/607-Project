@@ -1,0 +1,53 @@
+---
+title: "Project 3 cleaning"
+author: "Neil Hodgkinson, Bridget Boakye, Wilson Ng, Marjete Vucinaj"
+date: "2022-10-19"
+output: html_document
+---
+
+```{r setup, include=TRUE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyr)
+library(dplyr)
+library(readr)
+
+urlfile="https://raw.githubusercontent.com/Nhodgkinson/Data607_Project_3/main/Copy%20of%20Data%20Science%20Career%20Terms%20-%20ds%20software.csv"
+
+sfdf<-read_csv(url(urlfile))
+
+sfdf<-sfdf[,c(1:5)] #remove columns right of column 5
+
+sfdf<-sfdf[-c(38:42),] #Remove bottom 5 rows
+
+urlfile2="https://raw.githubusercontent.com/Nhodgkinson/Data607_Project_3/main/Copy%20of%20Data%20Science%20Career%20Terms%20-%20ds%20skills.csv"
+
+skdf<-read_csv(url(urlfile2))
+
+skdf<-skdf[!is.na(skdf$Keyword),] 
+
+skdf<- skdf[-c(17,21,25,26),] 
+
+skdf<-skdf[-c(16:22),] 
+```
+
+##
+
+```{r }
+total <- rowSums(sfdf[,c(2:5)]) #sums row values starting from column 2. Gives us total number hits for each keyword by site
+
+sfdf$total<-total #makes total value a column
+
+skdf[is.na(skdf)]=0 #makes na value
+
+
+total2 <- rowSums(skdf[,c(2:5)]) #same as above but for skills
+
+skdf$total2<-total2
+```
+
+```{r}
+write.csv(sfdf,"software.csv",row.names = FALSE)
+write.csv(skdf,"skills.csv",row.names = FALSE)
+```
+
